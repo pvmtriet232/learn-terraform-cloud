@@ -1,26 +1,70 @@
-data "aws_region" "current" {}
+# Create VPC Terraform Module
+module "my-internet-vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "5.1.0"
 
-resource "aws_vpc_ipam" "test" {
-  operating_regions {
-    region_name = data.aws_region.current.name
+
+# VPC basics details
+  name = "vpc-dev-internet"
+  cidr = "10.0.0.0/16"
+  azs = var.availability_zone_names
+  private_subnets = ["10.0.1.0/24", "10.0.2.0/24"]
+  public_subnets = ["10.0.101.0/24", "10.0.102.0/24"]
+  
+
+  enable_nat_gateway = true
+  single_nat_gateway = false  
+  one_nat_gateway_per_az = true
+  reuse_nat_ips = true
+  external_nat_ip_ids = "${aws_eip.nat.*.id}" 
+
+  tags = {
+    Terraform = "true"
+    Environment = "dev"
+  }  
+  
+
+}
+resource "aws_eip" "nat" {
+  count = 3
+  vpc = true
+}
+
+
+/*
+module "my-intranet-vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+  version = "5.1.0"
+
+# VPC basics details
+  name = "vpc-dev-intranet"
+  cidr = "10.1.0.0/16"
+  azs = ["ap-southeast-1a", "ap-southeast-1b"]
+  private_subnets = ["10.0.3.0/24","10.0.4.0/24"]
+
+
+# Database Subnets
+  create_database_subnet_group = true
+  create_database_subnet_route_table = true
+  database_subnets = ["10.0.151.0/24", "10.0.152.0/24"] 
+# NAT gateway 
+  one_nat_gateway_per_az = true
+  
+# VPC DNS Parameters
+  enable_dns_hostname = true
+  enable_dns_support = true
+
+  public_subnet_tags = {
+    Name = "private-subnets"
   }
+
+}
+*/
+variable "availability_zone_names" {
+  type = list(string)
+  default = ["ap-southeast-1a","ap-southeast-1b"]
 }
 
-resource "aws_vpc_ipam_pool" "test" {
-  address_family = "ipv4"
-  ipam_scope_id  = aws_vpc_ipam.test.private_default_scope_id
-  locale         = data.aws_region.current.name
-}
 
-resource "aws_vpc_ipam_pool_cidr" "test" {
-  ipam_pool_id = aws_vpc_ipam_pool.test.id
-  cidr         = "172.2.0.0/16"
-}
 
-resource "aws_vpc" "test" {
-  ipv4_ipam_pool_id   = aws_vpc_ipam_pool.test.id
-  ipv4_netmask_length = 28
-  depends_on = [
-    aws_vpc_ipam_pool_cidr.test
-  ]
-}
+
