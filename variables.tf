@@ -13,3 +13,8 @@ variable "instance_name" {
   default     = "Provisioned by Terraform"
 }
 
+
+variable "availability_zone_names" {
+  type = list(string)
+  default = ["ap-southeast-1a","ap-southeast-1b"]
+}
