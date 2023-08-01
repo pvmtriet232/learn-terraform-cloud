@@ -1,9 +1,8 @@
-
-output "vpc_id_internet" {
-  value = module.my-internet-vpc.vpc_id
+output "db_password" {
+  value = module.database.db_config.password
+  sensitive = true
 }
 
-output "vpc_id_intranet" {
-  value = module.my-intranet-vpc.vpc_id
+output "lb_dns_name" {
+  value = module.autoscaling.lb_dns_name
 }
-

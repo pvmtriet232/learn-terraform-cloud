@@ -1,20 +1,16 @@
+variable "namespace" {
+  description = "The project namespace to use for unique resource naming"
+  type        = string
+}
+
+variable "ssh_keypair" {
+  description = "SSH keypair to use for EC2 instance"
+  default     = null #A
+  type        = string
+}
+
 variable "region" {
   description = "AWS region"
-  default     = "ap-southeast-1"
-}
-
-variable "instance_type" {
-  description = "Type of EC2 instance to provision"
-  default     = "t2.micro"
-}
-
-variable "instance_name" {
-  description = "EC2 instance name"
-  default     = "Provisioned by Terraform"
-}
-
-
-variable "availability_zone_names" {
-  type = list(string)
-  default = ["ap-southeast-1a","ap-southeast-1b"]
+  default     = "us-west-2"
+  type        = string
 }
