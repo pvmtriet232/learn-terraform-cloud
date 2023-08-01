@@ -51,7 +51,7 @@ module "alb" {
   name               = var.namespace
   load_balancer_type = "application"
   vpc_id             = var.vpc.vpc_id
-  subnets            = var.vpc.public_subnets
+  subnets            = var.vpc.private_subnets
   security_groups    = [var.sg.lb]
 
   http_tcp_listeners = [

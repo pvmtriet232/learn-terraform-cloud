@@ -2,7 +2,6 @@ data "aws_availability_zones" "available" {}
 
 module "vpc-intranet" { #A
   source                           = "terraform-aws-modules/vpc/aws"
-  version                          = "2.64.0"
   name                             = "${var.namespace}-vpc"
   cidr                             = "10.0.0.0/16"
   azs                              = data.aws_availability_zones.available.names
@@ -11,9 +10,11 @@ module "vpc-intranet" { #A
   
   create_database_subnet_group     = true
   create_database_subnet_route_table = true
+  create_database_internet_gateway_route = true
+
   private_subnet_tags = {
     Name = "private-subnets"
-  }
+   }
 }
 
 module "lb_sg" {
