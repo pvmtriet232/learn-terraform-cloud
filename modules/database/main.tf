@@ -10,7 +10,7 @@ resource "aws_db_instance" "database" {
   engine_version         = "8.0"
   instance_class         = "db.t2.micro"
   identifier             = "${var.namespace}-db-instance"
-  name                   = "pets"
+  db_name                   = "pets"
   username               = "admin"
   password               = random_password.password.result
   db_subnet_group_name   = var.vpc.database_subnet_group #B
