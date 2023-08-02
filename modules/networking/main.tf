@@ -9,7 +9,7 @@ module "vpc-intranet" { #A
   database_subnets                 = ["10.0.21.0/24", "10.0.22.0/24" ]
   
   create_database_subnet_group     = true
-  create_database_subnet_route_table = true
+  # create_database_subnet_route_table = true
   create_database_internet_gateway_route = true
 
   private_subnet_tags = {
